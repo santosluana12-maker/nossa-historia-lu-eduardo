@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Nossa História ❤️</title>
+
+<style>
+
+body{
+margin:0;
+background:#111;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+
+h1{
+margin-top:20px;
+}
+
+#game{
+width:90vw;
+max-width:420px;
+height:90vw;
+max-height:420px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+grid-template-rows:repeat(4,1fr);
+}
+
+.tile{
+background-size:400% 400%;
+cursor:pointer;
+}
+
+#message{
+display:none;
+padding:30px;
+font-size:18px;
+line-height:1.5;
+}
+
+button{
+padding:15px 25px;
+font-size:16px;
+border:none;
+border-radius:10px;
+background:#ff4d6d;
+color:white;
+margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Nossa História em Pedaços 💖</h1>
+
+<div id="game"></div>
+
+<div id="message">
+<p id="text"></p>
+<button onclick="nextPhase()">Continuar ❤️</button>
+</div>
+
+<script>
+
+const phases = [
+
+{
+image:"foto1.jpg",
+text:`2019.
+
+Na Aprimorar éramos apenas colegas.
+
+Conversas no trabalho,
+risadas no meio da rotina…
+
+Talvez a gente fosse um pouco
+Jim e Pam sem perceber.
+
+O amor já estava ali.
+Só estava esperando o momento certo.`
+},
+
+{
+image:"foto2.jpg",
+text:`12/05/2025.
+
+Depois de tantos anos
+sendo apoio um do outro,
+finalmente nos permitimos.
+
+E naquele momento
+a amizade virou escolha.
+
+E eu escolheria você
+todos os dias.`
+},
+
+{
+image:"foto3.jpg",
+text:`Nossa viagem ao Paraguai.
+
+Entre risadas,
+fotos e momentos simples,
+
+eu percebi uma coisa:
+
+Não importa o lugar.
+
+Se for com você,
+sempre será especial.`
+},
+
+{
+image:"foto4.jpg",
+text:`Eduardo,
+
+Nossa história começou
+em amizade.
+
+Cresceu em silêncio.
+
+E floresceu no tempo certo.
+
+Se existe uma versão brasileira
+de Jim e Pam…
+
+somos nós.
+
+Feliz nosso aniversário ❤️
+
+Com amor,
+Lu.`
+}
+
+]
+
+let phase=0
+let tiles=[]
+let empty=15
+
+const game=document.getElementById("game")
+
+function start(){
+
+game.innerHTML=""
+tiles=[]
+
+for(let i=0;i<16;i++){
+
+const tile=document.createElement("div")
+tile.className="tile"
+
+if(i!==15){
+
+tile.style.backgroundImage=`url(${phases[phase].image})`
+
+let x=i%4
+let y=Math.floor(i/4)
+
+tile.style.backgroundPosition=`${x*33.33}% ${y*33.33}%`
+
+tile.dataset.index=i
+
+tile.onclick=move
+}
+
+game.appendChild(tile)
+tiles.push(tile)
+
+}
+
+shuffle()
+
+}
+
+function shuffle(){
+
+for(let i=0;i<200;i++){
+
+let moves=[empty-1,empty+1,empty-4,empty+4]
+let move=moves[Math.floor(Math.random()*moves.length)]
+
+if(move>=0 && move<16){
+swap(move)
+}
+
+}
+
+}
+
+function move(){
+
+let index=tiles.indexOf(this)
+
+let valid=[empty-1,empty+1,empty-4,empty+4]
+
+if(valid.includes(index)){
+
+swap(index)
+
+checkWin()
+
+}
+
+}
+
+function swap(i){
+
+tiles[empty].style.backgroundImage=tiles[i].style.backgroundImage
+tiles[empty].style.backgroundPosition=tiles[i].style.backgroundPosition
+
+tiles[i].style.backgroundImage=""
+tiles[i].style.backgroundPosition=""
+
+empty=i
+
+}
+
+function checkWin(){
+
+let correct=true
+
+for(let i=0;i<15;i++){
+
+let x=i%4
+let y=Math.floor(i/4)
+
+if(tiles[i].style.backgroundPosition!==`${x*33.33}% ${y*33.33}%`){
+correct=false
+}
+
+}
+
+if(correct){
+
+document.getElementById("text").innerText=phases[phase].text
+document.getElementById("message").style.display="block"
+game.style.display="none"
+
+}
+
+}
+
+function nextPhase(){
+
+phase++
+
+if(phase>=phases.length){
+
+document.getElementById("message").innerHTML="<h2>❤️ Eu te amo ❤️</h2>"
+
+return
+}
+
+document.getElementById("message").style.display="none"
+game.style.display="grid"
+
+empty=15
+
+start()
+
+}
+
+start()
+
+</script>
+
+</body>
+</html>
