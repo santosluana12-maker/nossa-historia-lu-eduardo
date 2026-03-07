@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosso Amor Supera Tudo</title>
+
+<style>
+
+body{
+margin:0;
+background:#ffd9ec;
+font-family:sans-serif;
+overflow:hidden;
+text-align:center;
+}
+
+h1{
+font-size:22px;
+color:#ff2f7d;
+}
+
+#fase{
+font-size:18px;
+margin-bottom:10px;
+}
+
+#game{
+position:relative;
+width:100%;
+height:300px;
+background:white;
+border-bottom:4px solid #ff6fa5;
+overflow:hidden;
+}
+
+#personagem{
+position:absolute;
+bottom:0;
+left:50px;
+width:90px;
+}
+
+.obstaculo{
+position:absolute;
+bottom:0;
+width:60px;
+height:60px;
+background:#ff4d88;
+color:white;
+font-size:10px;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+border-radius:12px;
+padding:5px;
+}
+
+#mensagemFinal{
+display:none;
+padding:20px;
+font-size:20px;
+color:#ff2f7d;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>💖 Nosso Amor é Mais Forte 💖</h1>
+<div id="fase">Fase 1</div>
+
+<div id="game">
+
+<video id="personagem" autoplay loop muted playsinline>
+<source src="personagem.mp4" type="video/mp4">
+</video>
+
+</div>
+
+<div id="mensagemFinal">
+💖 Passamos por todas as fases da vida juntos.<br><br>
+
+Entre ciúmes, saudade e distância,<br>
+nosso amor continuou correndo.<br><br>
+
+E no final de tudo,<br>
+eu escolheria você de novo. ❤️
+</div>
+
+<script>
+
+let personagem = document.getElementById("personagem")
+let game = document.getElementById("game")
+let faseTexto = document.getElementById("fase")
+
+let pulando=false
+let fase=1
+let velocidade=4
+let contador=0
+
+let obstaculosRelacionamento=[
+"Ciúmes",
+"Distância",
+"Brigas",
+"Saudade",
+"Insegurança",
+"Falta de tempo",
+"Orgulho"
+]
+
+document.addEventListener("touchstart",pular)
+document.addEventListener("click",pular)
+
+function pular(){
+
+if(pulando) return
+
+pulando=true
+
+let altura=0
+
+let subir=setInterval(()=>{
+
+if(altura>=100){
+
+clearInterval(subir)
+
+let descer=setInterval(()=>{
+
+if(altura<=0){
+
+clearInterval(descer)
+pulando=false
+
+}else{
+
+altura-=5
+personagem.style.bottom=altura+"px"
+
+}
+
+},20)
+
+}else{
+
+altura+=5
+personagem.style.bottom=altura+"px"
+
+}
+
+},20)
+
+}
+
+function criarObstaculo(){
+
+let obstaculo=document.createElement("div")
+obstaculo.classList.add("obstaculo")
+
+obstaculo.innerText=
+obstaculosRelacionamento[Math.floor(Math.random()*obstaculosRelacionamento.length)]
+
+obstaculo.style.left=window.innerWidth+"px"
+
+game.appendChild(obstaculo)
+
+let mover=setInterval(()=>{
+
+let posicao=obstaculo.offsetLeft
+
+if(posicao<-60){
+
+clearInterval(mover)
+game.removeChild(obstaculo)
+
+contador++
+
+if(contador%5==0){
+
+fase++
+velocidade+=1.5
+
+faseTexto.innerText="Fase "+fase
+
+if(fase>5){
+finalizar()
+}
+
+}
+
+}else{
+
+obstaculo.style.left=posicao-velocidade+"px"
+
+}
+
+let personagemBottom=parseInt(
+window.getComputedStyle(personagem).bottom)
+
+if(posicao<120 && posicao>40 && personagemBottom<40){
+
+alert("Vocês tropeçaram... mas o amor sempre pode tentar novamente ❤️")
+location.reload()
+
+}
+
+},20)
+
+}
+
+setInterval(criarObstaculo,2000)
+
+function finalizar(){
+
+game.style.display="none"
+faseTexto.style.display="none"
+
+document.getElementById("mensagemFinal").style.display="block"
+
+}
+
+</script>
+
+</body>
+</html>
